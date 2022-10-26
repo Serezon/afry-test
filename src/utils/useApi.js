@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useApi = (
   endpoint,
@@ -8,17 +8,20 @@ export const useApi = (
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const loadData = async (params = null) => {
-    setLoading(true)
-    try {
-      const response = await endpoint(params || initialParams)
-      setData(response)
-      setError(null)
-    } catch (e) {
-      setError(e.message)
-    }
-    setLoading(false)
-  }
+  const loadData = useCallback(
+    async (params = null) => {
+      setLoading(true)
+      try {
+        const response = await endpoint(params || initialParams)
+        setData(response)
+        setError(null)
+      } catch (e) {
+        setError(e.message)
+      }
+      setLoading(false)
+    },
+    [setLoading, initialParams, setData, setError, endpoint],
+  )
 
   useEffect(() => {
     if (initialLoad) loadData()

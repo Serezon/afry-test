@@ -9,4 +9,4 @@ Steps to start project:
 Notes for reviewers:
 
 - I wasn't focusing on the looks of the UI, it's mostly there just to test app functionality
-- Promise wrappers for localStorage - totally unnecessary, but I wanted app look similar to regular apps with api calls
+- Promise wrappers for localStorage - totally unnecessary, but I wanted app to look similar to regular apps with api calls
