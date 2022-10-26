@@ -1,6 +1,16 @@
-import { Modal, Form, Input, Button } from 'antd'
+import { Modal, Form, Input, Button, notification } from 'antd'
+import { createCompany } from '../../../api'
 
-export const CompanyCreate = ({ isOpen, setIsOpen }) => {
+export const CompanyCreate = ({ isOpen, setIsOpen, onSuccess }) => {
+  const [form] = Form.useForm()
+
+  const onFinish = async (values) => {
+    await createCompany(values)
+    form.resetFields()
+    notification.success({ message: 'Company was created' })
+    onSuccess()
+    setIsOpen(false)
+  }
   return (
     <Modal
       title='Create company'
@@ -11,10 +21,9 @@ export const CompanyCreate = ({ isOpen, setIsOpen }) => {
     >
       <Form
         name='create-company'
+        form={form}
         autoComplete='off'
-        onFinish={(values) => {
-          console.log(values)
-        }}
+        onFinish={onFinish}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
       >

@@ -31,7 +31,9 @@ export const Layout = ({ routes = [] }) => {
           items={navItems}
         />
       </Header>
-      <Content className='content'>{children}</Content>
+      <Content className='content'>
+        <div className='wrapper'>{children}</div>
+      </Content>
     </AntLayout>
   )
 }

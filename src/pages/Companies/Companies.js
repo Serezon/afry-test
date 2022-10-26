@@ -1,20 +1,19 @@
 import { Button, PageHeader, Table } from 'antd'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CompanyCreate } from './CompanyCreate/CompanyCreate'
 import { CompanyDetails } from './CompanyDetails/CompanyDetails'
 
 import './Companies.sass'
-
-const dataSource = [
-  { key: '1', name: 'test' },
-  { key: '2', name: 'test' },
-  { key: '3', name: 'test' },
-  { key: '4', name: 'test' },
-]
+import { useApi } from '../../utils'
+import { getCompaniesList } from '../../api'
 
 export const Companies = () => {
+  const { data: companies, loadData: loadCompanies } = useApi(getCompaniesList, {
+    initialState: [],
+  })
   const [isCompanyOpen, setIsCompanyOpen] = useState(false)
   const [isCompanyCreateOpen, setIsCompanyCreateOpen] = useState(false)
+  const [currentId, setCurrentId] = useState(false)
   const columns = [
     {
       title: 'Company name',
@@ -28,6 +27,7 @@ export const Companies = () => {
         <Button
           type='primary'
           onClick={() => {
+            setCurrentId(record.id)
             setIsCompanyOpen(true)
           }}
         >
@@ -37,6 +37,15 @@ export const Companies = () => {
       width: '100px',
     },
   ]
+  const dataSource = useMemo(
+    () =>
+      companies.map((c) => ({
+        key: c.id,
+        id: c.id,
+        name: c.name,
+      })),
+    [companies],
+  )
   return (
     <div className='companies'>
       <PageHeader
@@ -54,8 +63,16 @@ export const Companies = () => {
         columns={columns}
         dataSource={dataSource}
       />
-      <CompanyDetails isOpen={isCompanyOpen} setIsOpen={setIsCompanyOpen} />
-      <CompanyCreate isOpen={isCompanyCreateOpen} setIsOpen={setIsCompanyCreateOpen} />
+      <CompanyDetails
+        isOpen={isCompanyOpen}
+        setIsOpen={setIsCompanyOpen}
+        id={currentId}
+      />
+      <CompanyCreate
+        isOpen={isCompanyCreateOpen}
+        onSuccess={loadCompanies}
+        setIsOpen={setIsCompanyCreateOpen}
+      />
     </div>
   )
 }

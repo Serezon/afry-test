@@ -1,6 +1,19 @@
-import { Modal, Form, Select, Button } from 'antd'
+import { Modal, Form, Select, Button, notification } from 'antd'
+import { getCompaniesList, linkEmployeeToCompany } from '../../../api'
+import { useApi } from '../../../utils'
 
-export const LinkPersonToCompany = ({ isOpen, setIsOpen }) => {
+export const LinkPersonToCompany = ({ isOpen, setIsOpen, id, onSuccess }) => {
+  const { data: companies } = useApi(getCompaniesList, { initialState: [] })
+  const [form] = Form.useForm()
+
+  const onFinish = async (values) => {
+    await linkEmployeeToCompany(values.company, id)
+    form.resetFields()
+    notification.success({ message: 'Person was linked to company' })
+    onSuccess()
+    setIsOpen(false)
+  }
+
   return (
     <Modal
       title='Link person to company'
@@ -12,9 +25,8 @@ export const LinkPersonToCompany = ({ isOpen, setIsOpen }) => {
       <Form
         name='link-person'
         autoComplete='off'
-        onFinish={(values) => {
-          console.log(values)
-        }}
+        form={form}
+        onFinish={onFinish}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
       >
@@ -31,7 +43,11 @@ export const LinkPersonToCompany = ({ isOpen, setIsOpen }) => {
               option.children.toLowerCase().includes(input.toLowerCase())
             }
           >
-            <Select.Option value='test'>Test</Select.Option>
+            {companies.map((c) => (
+              <Select.Option key={c.id} value={c.id}>
+                {c.name}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

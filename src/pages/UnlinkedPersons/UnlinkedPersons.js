@@ -1,17 +1,16 @@
 import { PageHeader, Button, Table } from 'antd'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { getUnlinkedPersonsList } from '../../api'
+import { useApi } from '../../utils'
 import { LinkPersonToCompany } from './LinkPersonToCompany/LinkPersonToCompany'
 import './UnlinkedPersons.sass'
 
-const dataSource = [
-  { key: '1', name: 'test' },
-  { key: '2', name: 'test' },
-  { key: '3', name: 'test' },
-  { key: '4', name: 'test' },
-]
-
 export const UnlinkedPersons = () => {
+  const { data: unlinkedPersons, loadData: loadPersonsList } = useApi(getUnlinkedPersonsList, {
+    initialState: [],
+  })
   const [isLinkPersonToCompanyOpen, setIsLinkPersonToCompanyOpen] = useState(false)
+  const [currentId, setCurrentId] = useState(null)
   const columns = [
     {
       title: 'Employee name',
@@ -25,6 +24,7 @@ export const UnlinkedPersons = () => {
         <Button
           type='primary'
           onClick={() => {
+            setCurrentId(record.id)
             setIsLinkPersonToCompanyOpen(true)
           }}
         >
@@ -34,6 +34,17 @@ export const UnlinkedPersons = () => {
       width: '100px',
     },
   ]
+
+  const dataSource = useMemo(
+    () =>
+      unlinkedPersons.map((p) => ({
+        key: p.id,
+        id: p.id,
+        name: p.name,
+      })),
+    [unlinkedPersons],
+  )
+
   return (
     <div className='unlinked-persons'>
       <PageHeader title='Unlinked persons' />
@@ -46,6 +57,8 @@ export const UnlinkedPersons = () => {
       />
       <LinkPersonToCompany
         isOpen={isLinkPersonToCompanyOpen}
+        id={currentId}
+        onSuccess={loadPersonsList}
         setIsOpen={setIsLinkPersonToCompanyOpen}
       />
     </div>

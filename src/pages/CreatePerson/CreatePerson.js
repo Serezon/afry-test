@@ -1,27 +1,35 @@
-import { Button, Form, Input, PageHeader, Select } from 'antd'
+import { Button, Form, Input, notification, PageHeader, Select } from 'antd'
+import { createPerson, getCompaniesList, linkEmployeeToCompany } from '../../api'
+import { useApi } from '../../utils'
 import './CreatePerson.sass'
 
 export const CreatePerson = () => {
+  const { data: companies } = useApi(getCompaniesList, { initialState: [] })
+
+  const [form] = Form.useForm()
+
+  const onFinish = async (values) => {
+    const person = await createPerson({ name: values.name })
+    if (values.company) await linkEmployeeToCompany(values.company, person.id)
+    form.resetFields()
+    notification.success({ message: 'Person was created' })
+  }
+
   return (
     <div className='create-person'>
       <PageHeader title='Create person' />
       <Form
+        form={form}
         name='create-person'
         autoComplete='off'
-        onFinish={(values) => {
-          console.log(values)
-        }}
+        onFinish={onFinish}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
       >
         <Form.Item label='Name' name='name' rules={[{ required: true, message: 'Required field' }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          label='Company'
-          name='company'
-          rules={[{ required: true, message: 'Required field' }]}
-        >
+        <Form.Item label='Company' name='company'>
           <Select
             showSearch
             placeholder='Select a company'
@@ -30,7 +38,11 @@ export const CreatePerson = () => {
               option.children.toLowerCase().includes(input.toLowerCase())
             }
           >
-            <Select.Option value='test'>Test</Select.Option>
+            {companies.map((c) => (
+              <Select.Option key={c.id} value={c.id}>
+                {c.name}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
