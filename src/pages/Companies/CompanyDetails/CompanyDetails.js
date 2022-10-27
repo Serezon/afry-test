@@ -1,7 +1,7 @@
 import { Button, Modal, notification, Table } from 'antd'
 import { useEffect, useMemo } from 'react'
 import { getCompany, removeEmployeeFromCompany } from '../../../api'
-import { useApi } from '../../../utils'
+import { useApi } from '../../../hooks'
 
 export const CompanyDetails = ({ isOpen, setIsOpen, id }) => {
   const { data: company, loadData: loadCompany } = useApi(getCompany, {

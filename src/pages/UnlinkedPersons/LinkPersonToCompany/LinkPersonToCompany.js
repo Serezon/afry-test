@@ -1,6 +1,6 @@
 import { Modal, Form, Select, Button, notification } from 'antd'
 import { getCompaniesList, linkEmployeeToCompany } from '../../../api'
-import { useApi } from '../../../utils'
+import { useApi } from '../../../hooks'
 
 export const LinkPersonToCompany = ({ isOpen, setIsOpen, id, onSuccess }) => {
   const { data: companies } = useApi(getCompaniesList, { initialState: [] })

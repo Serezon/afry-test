@@ -1,7 +1,7 @@
 import { PageHeader, Button, Table } from 'antd'
 import { useMemo, useState } from 'react'
 import { getUnlinkedPersonsList } from '../../api'
-import { useApi } from '../../utils'
+import { useApi } from '../../hooks'
 import { LinkPersonToCompany } from './LinkPersonToCompany/LinkPersonToCompany'
 import './UnlinkedPersons.sass'
 

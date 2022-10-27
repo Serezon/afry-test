@@ -1,6 +1,6 @@
 import { Button, Form, Input, notification, PageHeader, Select } from 'antd'
 import { createPerson, getCompaniesList, linkEmployeeToCompany } from '../../api'
-import { useApi } from '../../utils'
+import { useApi } from '../../hooks'
 import './CreatePerson.sass'
 
 export const CreatePerson = () => {

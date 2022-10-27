@@ -4,7 +4,7 @@ import { CompanyCreate } from './CompanyCreate/CompanyCreate'
 import { CompanyDetails } from './CompanyDetails/CompanyDetails'
 
 import './Companies.sass'
-import { useApi } from '../../utils'
+import { useApi } from '../../hooks'
 import { getCompaniesList } from '../../api'
 
 export const Companies = () => {
